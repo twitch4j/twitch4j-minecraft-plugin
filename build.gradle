@@ -1,0 +1,45 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+apply plugin: 'java'
+
+group = 'com.github.twitch4j'
+version = '1.0.0'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+// Repositories
+repositories {
+	mavenCentral()
+	jcenter()
+	maven {
+		name = 'spigotmc-repo'
+		url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+	}
+}
+
+// Dependencies
+dependencies {
+	// Minecraft server environment (provided)
+	compileOnly group: 'org.bukkit', name: 'bukkit', version: '1.15.2-R0.1-SNAPSHOT'
+
+	// Twitch4J
+	implementation group: 'com.github.twitch4j', name: 'twitch4j', version: '1.1.2'
+
+	// Logging
+	implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+}
+
+// Ensure plugin.yml has the version defined here
+processResources {
+	from(sourceSets.main.resources.srcDirs) {
+		filter ReplaceTokens, tokens: [version: version]
+	}
+}
+
+// Create a fat jar at: build/libs/
+jar {
+	from {
+		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+}
