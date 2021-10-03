@@ -8,6 +8,12 @@ import com.github.twitch4j.chat.events.channel.SubscriptionEvent;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import com.github.twitch4j.helix.domain.Stream;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Firework;
+import org.bukkit.inventory.meta.FireworkMeta;
 
 public class TwitchEventHandler {
 
@@ -48,6 +54,31 @@ public class TwitchEventHandler {
     @EventSubscriber
     public void onSubMysteryGift(GiftSubscriptionsEvent event) {
         broadcast(String.format("[Twitch] Thank you %s for gifting %d subs to %s", event.getUser().getName(), event.getCount(), event.getChannel().getName()));
+
+        // Create a firework at spawn for a large gift sub event
+        // Note: these EventSubscriber's operate on a separate thread so we need to use Bukkit's scheduler to run this on the main thread
+        if (event.getCount() >= 25) {
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                World world = plugin.getServer().getWorlds().get(0);
+                Location spawnLocation = plugin.getServer().getWorlds().get(0).getSpawnLocation();
+                if (world.isChunkLoaded(spawnLocation.getChunk())) {
+                    world.spawn(spawnLocation, Firework.class, fw -> {
+                        FireworkMeta meta = fw.getFireworkMeta();
+                        meta.setPower(Math.min(event.getCount(), 64));
+                        meta.addEffect(
+                            FireworkEffect.builder()
+                                .with(FireworkEffect.Type.STAR)
+                                .flicker(event.getCount() >= 50)
+                                .trail(event.getCount() >= 100)
+                                .withColor(Color.FUCHSIA)
+                                .withFade(Color.PURPLE)
+                                .build()
+                        );
+                        fw.setFireworkMeta(meta);
+                    });
+                }
+            });
+        }
     }
 
     private void broadcast(String message) {
