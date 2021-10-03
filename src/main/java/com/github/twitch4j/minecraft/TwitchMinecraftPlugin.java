@@ -2,7 +2,7 @@ package com.github.twitch4j.minecraft;
 
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.philippheuer.events4j.simple.SimpleEventHandler;
-import com.github.twitch4j.TwitchClient;
+import com.github.twitch4j.ITwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public final class TwitchMinecraftPlugin extends JavaPlugin {
 
-    private TwitchClient client;
+    private ITwitchClient client;
 
     @Override
     public void onEnable() {
@@ -52,7 +52,7 @@ public final class TwitchMinecraftPlugin extends JavaPlugin {
             client.close();
     }
 
-    public TwitchClient getTwitchClient() {
+    public ITwitchClient getTwitchClient() {
         return this.client;
     }
 

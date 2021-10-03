@@ -11,7 +11,6 @@ targetCompatibility = '1.8'
 // Repositories
 repositories {
 	mavenCentral()
-	jcenter()
 	maven {
 		name = 'spigotmc-repo'
 		url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
@@ -24,7 +23,7 @@ dependencies {
 	compileOnly group: 'org.bukkit', name: 'bukkit', version: '1.15.2-R0.1-SNAPSHOT'
 
 	// Twitch4J
-	implementation group: 'com.github.twitch4j', name: 'twitch4j', version: '1.1.3'
+	implementation group: 'com.github.twitch4j', name: 'twitch4j', version: '1.5.1'
 
 	// Logging
 	implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
@@ -33,6 +32,7 @@ dependencies {
 // Ensure plugin.yml has the version defined here
 processResources {
 	from(sourceSets.main.resources.srcDirs) {
+		duplicatesStrategy DuplicatesStrategy.INCLUDE // config, logback, and plugin yml files are not dupes - https://github.com/gradle/gradle/issues/17236
 		filter ReplaceTokens, tokens: [version: version]
 	}
 }
@@ -40,6 +40,7 @@ processResources {
 // Create a fat jar at: build/libs/
 jar {
 	from {
+		duplicatesStrategy DuplicatesStrategy.INCLUDE // primarily META-INF duplicates
 		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
 	}
 }
