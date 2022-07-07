@@ -60,7 +60,7 @@ public class TwitchEventHandler {
         if (event.getCount() >= 25) {
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                 World world = plugin.getServer().getWorlds().get(0);
-                Location spawnLocation = plugin.getServer().getWorlds().get(0).getSpawnLocation();
+                Location spawnLocation = world.getSpawnLocation();
                 if (world.isChunkLoaded(spawnLocation.getChunk())) {
                     world.spawn(spawnLocation, Firework.class, fw -> {
                         FireworkMeta meta = fw.getFireworkMeta();
