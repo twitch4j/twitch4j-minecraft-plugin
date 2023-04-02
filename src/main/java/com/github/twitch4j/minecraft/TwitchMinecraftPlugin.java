@@ -32,6 +32,7 @@ public final class TwitchMinecraftPlugin extends JavaPlugin {
             .withChatAccount(credential)
             .withEnableHelix(true)
             .withDefaultAuthToken(credential)
+            .withChatCommandsViaHelix(false)
             .build();
 
         // Join the twitch chats of these channels and enable stream/follow events
