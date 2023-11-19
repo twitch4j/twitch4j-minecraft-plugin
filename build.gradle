@@ -23,7 +23,7 @@ dependencies {
 	compileOnly group: 'org.bukkit', name: 'bukkit', version: '1.15.2-R0.1-SNAPSHOT'
 
 	// Twitch4J
-	implementation group: 'com.github.twitch4j', name: 'twitch4j', version: '1.14.0'
+	implementation group: 'com.github.twitch4j', name: 'twitch4j', version: '1.18.0'
 }
 
 // Ensure plugin.yml has the version defined here
