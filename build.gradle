@@ -1,12 +1,18 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.apache.tools.ant.filters.ReplaceTokens
 
-apply plugin: 'java'
+plugins {
+	id 'java'
+	id 'com.gradleup.shadow' version '8.3.6'
+}
 
 group = 'com.github.twitch4j'
 version = '1.0.0'
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
 
 // Repositories
 repositories {
@@ -20,10 +26,10 @@ repositories {
 // Dependencies
 dependencies {
 	// Minecraft server environment (provided)
-	compileOnly group: 'org.bukkit', name: 'bukkit', version: '1.15.2-R0.1-SNAPSHOT'
+	compileOnly group: 'org.spigotmc', name: 'spigot-api', version: '1.21.4-R0.1-SNAPSHOT'
 
 	// Twitch4J
-	implementation group: 'com.github.twitch4j', name: 'twitch4j', version: '1.18.0'
+	implementation group: 'com.github.twitch4j', name: 'twitch4j', version: '1.24.0'
 }
 
 // Ensure plugin.yml has the version defined here
@@ -34,10 +40,6 @@ processResources {
 	}
 }
 
-// Create a fat jar at: build/libs/
-jar {
-	from {
-		duplicatesStrategy DuplicatesStrategy.INCLUDE // primarily META-INF duplicates
-		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-	}
+tasks.named('shadowJar', ShadowJar) {
+	relocate 'com.fasterxml.jackson', 'shaded.com.fasterxml.jackson'
 }
